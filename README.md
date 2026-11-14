@@ -1,4 +1,4 @@
-# Zero-Trust Local Meeting Assistant
+# Pulsar Notes
 
 A 100% offline, privacy-first meeting transcription and summarization assistant built for **Apple Silicon (macOS)**. All audio capture, MLX speech-to-text, Ollama LLM summarization, and SQLite storage stay strictly on your machine with zero cloud APIs or external network calls.
 
@@ -14,7 +14,7 @@ A 100% offline, privacy-first meeting transcription and summarization assistant 
 ## Project Structure
 
 ```text
-local_meeting_assistant/
+pulsar-notes/
 ├── architecture/              # Architecture specs & phased implementation plan
 ├── assets/                    # App icons (app_icon.png, app_icon.icns)
 ├── backend/                   # FastAPI server, audio DSP, MLX ASR, Ollama summarizer, SQLite DAL

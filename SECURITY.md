@@ -2,7 +2,7 @@
 
 ## Threat Model & Guarantees
 
-Local Meeting Assistant is designed for confidential and private meetings:
+Pulsar Notes is designed for confidential and private meetings:
 
 1. **Zero Network Exfiltration:**
    - Offline flags (`HF_HUB_OFFLINE=1`, `TRANSFORMERS_OFFLINE=1`, `HF_DATASETS_OFFLINE=1`, `DO_NOT_TRACK=1`, `OLLAMA_NOHISTORY=1`) are enforced at startup in `backend/config.py`.

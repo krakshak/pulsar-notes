@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for contributing to **Local Meeting Assistant**! Please follow the SDLC workflow and security invariants below.
+Thank you for contributing to **Pulsar Notes**! Please follow the SDLC workflow and security invariants below.
 
 ## Development Workflow
 

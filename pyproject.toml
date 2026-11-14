@@ -1,5 +1,5 @@
 [project]
-name = "local-meeting-assistant"
+name = "pulsar-notes"
 version = "1.0.0"
 description = "100% offline, zero-trust local meeting transcription and summarization assistant for Apple Silicon."
 readme = "README.md"

@@ -1,0 +1,40 @@
+# Virtual environments & dependencies
+.venv/
+venv/
+env/
+
+# Python cache & build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local SQLite databases & WAL/SHM files (never commit user meeting data)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Local logs, env files & temporary artifacts
+*.log
+.env
+.env.*
+*.wav
+*.mp3
+*.pcm
+
+# macOS & IDE metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+.vscode/
+.idea/
+*.swp
+*.swo

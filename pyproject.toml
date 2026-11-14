@@ -1,0 +1,21 @@
+[project]
+name = "local-meeting-assistant"
+version = "1.0.0"
+description = "100% offline, zero-trust local meeting transcription and summarization assistant for Apple Silicon."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+exclude = [".venv", "__pycache__", "frontend/vendor"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]

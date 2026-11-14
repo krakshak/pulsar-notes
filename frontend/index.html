@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://127.0.0.1:8000 ws://127.0.0.1:8000; img-src 'self' data:;">
+  <meta name="local-session-token" content="__LOCAL_SESSION_TOKEN__">
+  <title>Local Meeting Notes</title>
+  <link rel="stylesheet" href="/static/vendor/base.css">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Left Sidebar -->
+    <aside class="sidebar" aria-label="Meeting History">
+      <div class="sidebar-header">
+        <div class="brand-row">
+          <h1 class="brand-title">Local Meeting Notes</h1>
+          <button id="themeToggleBtn" class="icon-btn" type="button" title="Toggle Dark/Light Theme" aria-label="Toggle theme"></button>
+        </div>
+        <div class="offline-pill">
+          <span class="offline-dot"></span>
+          <span>100% Offline • M5 MLX</span>
+        </div>
+      </div>
+
+      <div class="sidebar-controls">
+        <div class="search-box">
+          <span class="search-icon" id="searchIconSlot"></span>
+          <input id="searchInput" class="search-input" type="search" placeholder="Search meetings & tasks..." aria-label="Search meetings">
+        </div>
+        <div class="filter-tabs" role="tablist">
+          <button id="tabAll" class="filter-tab active" type="button" role="tab" aria-selected="true">All Meetings</button>
+          <button id="tabOpen" class="filter-tab" type="button" role="tab" aria-selected="false">Open Action Items</button>
+        </div>
+      </div>
+
+      <nav id="meetingList" class="meeting-list" aria-label="Meetings"></nav>
+    </aside>
+
+    <!-- Right Workspace -->
+    <main class="main-area">
+      <!-- Top Live Recording Bar -->
+      <header class="recording-bar">
+        <div class="recording-row">
+          <div class="device-selectors">
+            <label class="select-group">
+              <span id="micIconSlot"></span>
+              <span>Mic [Me]:</span>
+              <select id="micSelect" aria-label="Microphone Input"></select>
+            </label>
+            <label class="select-group">
+              <span id="sysIconSlot"></span>
+              <span>System [Others]:</span>
+              <select id="sysSelect" aria-label="System Audio Input"></select>
+            </label>
+            <label class="select-group">
+              <span>LLM:</span>
+              <select id="llmSelect" aria-label="Local Summarization Model"></select>
+            </label>
+          </div>
+
+          <div id="ctaControls" class="device-selectors">
+            <button id="startBtn" class="btn btn-primary" type="button">● Start Live Meeting</button>
+            <button id="stopBtn" class="btn btn-danger hidden" type="button">
+              <span class="rec-dot"></span>
+              <span>■ End & Summarize</span>
+            </button>
+            <button id="discardBtn" class="btn btn-ghost hidden" type="button">Discard</button>
+          </div>
+        </div>
+
+        <!-- Live Recording Telemetry -->
+        <div id="liveTelemetry" class="live-telemetry hidden">
+          <div class="meter-group">
+            <span>Mic [Me]</span>
+            <div class="meter-track"><div id="micMeter" class="meter-fill"></div></div>
+          </div>
+          <div class="meter-group">
+            <span>System [Others]</span>
+            <div class="meter-track"><div id="sysMeter" class="meter-fill system"></div></div>
+          </div>
+          <span id="timerPill" class="timer-pill">00:00:00</span>
+          <span id="ramCounter" class="ram-counter">0 words • 0 tokens in RAM</span>
+          <button id="toggleDrawerBtn" class="btn btn-ghost btn-sm" type="button">Live Preview</button>
+        </div>
+
+        <!-- Collapsible Live Transcript Drawer -->
+        <div id="liveDrawer" class="live-drawer hidden">
+          <span id="liveSnippetText" class="live-snippet-text">Listening for speech...</span>
+        </div>
+
+        <!-- Summarizing Indicator -->
+        <div id="summarizingBanner" class="status-banner info hidden">
+          <span id="summarizingText">Unloading ASR & summarizing locally (0 bytes written to disk)...</span>
+        </div>
+
+        <!-- Failure Retry Banner -->
+        <div id="failureBanner" class="status-banner error hidden">
+          <span id="failureText">Summarization failed. Your transcript is safely retained in RAM.</span>
+          <div class="device-selectors">
+            <button id="retryBtn" class="btn btn-primary btn-sm" type="button">Retry</button>
+            <button id="retryFallbackBtn" class="btn btn-ghost btn-sm" type="button">Retry with Fallback LLM</button>
+            <button id="discardFailedBtn" class="btn btn-ghost btn-sm" type="button">Discard</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Meeting Canvas -->
+      <section class="canvas-scroll">
+        <div id="emptyState" class="empty-state">
+          <div id="emptyShieldSlot"></div>
+          <h2>Zero-Trust Local Meeting Notes</h2>
+          <p>Select a meeting from the sidebar or click <strong>Start Live Meeting</strong> to transcribe and summarize 100% locally on your Mac.</p>
+        </div>
+
+        <article id="meetingCanvas" class="canvas-container hidden">
+          <div class="canvas-header">
+            <div class="canvas-title-row">
+              <input id="canvasTitle" class="canvas-title-input" type="text" aria-label="Meeting Title">
+              <div class="canvas-actions">
+                <button id="copyMarkdownBtn" class="btn btn-ghost btn-sm" type="button">Copy as Slack/Markdown</button>
+                <button id="deleteMeetingBtn" class="btn btn-ghost btn-sm" type="button">Delete</button>
+              </div>
+            </div>
+            <div id="canvasMeta" class="canvas-meta-badges"></div>
+          </div>
+
+          <div class="section-card">
+            <h2 class="section-label">Executive Summary</h2>
+            <textarea id="canvasSummary" class="summary-textarea" aria-label="Executive Summary"></textarea>
+          </div>
+
+          <div class="section-card">
+            <h2 class="section-label">Key Takeaways</h2>
+            <ul id="takeawaysList" class="takeaways-list"></ul>
+            <button id="addTakeawayBtn" class="btn btn-ghost btn-sm" type="button" style="width: fit-content;">+ Add Takeaway</button>
+          </div>
+
+          <div class="section-card">
+            <h2 class="section-label">Action Items & Next Steps</h2>
+            <div id="actionItemsList" class="action-items-list"></div>
+            <form id="addActionForm" class="add-action-form">
+              <input id="newActionOwner" class="input-owner" type="text" placeholder="Owner (Me)" value="Me" aria-label="Action item owner">
+              <input id="newActionTask" class="input-task" type="text" placeholder="+ Add Action Item..." required aria-label="Action item description">
+              <input id="newActionDue" class="input-due" type="text" placeholder="Due date (opt)" aria-label="Due date">
+              <button class="btn btn-primary btn-sm" type="submit">Add</button>
+            </form>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script src="/static/vendor/icons.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
+
